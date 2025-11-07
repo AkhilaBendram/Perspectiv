@@ -1,0 +1,82 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "path": "analyze",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookDescription": {
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "responseData": "lastNode",
+        "path": "analyze"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fromFile",
+        "options": {
+          "firstRowAsHeader": true
+        }
+      },
+      "id": "2",
+      "name": "CSV File",
+      "type": "n8n-nodes-base.csvFile",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const rows = items.length;\nconst allColumns = new Set();\nitems.forEach(r => Object.keys(r.json).forEach(c => allColumns.add(c)));\n\nreturn [{\n  json: {\n    rows,\n    columns: Array.from(allColumns),\n    summaryPrompt: `The dataset has ${rows} rows and ${allColumns.size} columns: ${Array.from(allColumns).join(', ')}. Summarize the dataset and suggest 3 compelling charts.`\n  }\n}];"
+      },
+      "id": "3",
+      "name": "Prepare Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "chat",
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a data analyst AI. Summarize datasets and suggest visualizations."
+          },
+          {
+            "role": "user",
+            "content": "={{$json[\"summaryPrompt\"]}}"
+          }
+        ]
+      },
+      "id": "4",
+      "name": "OpenAI Summary",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { rows: $json.rows, columns: $json.columns, summary: items[0].json.content } }];"
+      },
+      "id": "5",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "CSV File", "type": "main", "index": 0 }]] },
+    "CSV File": { "main": [[{ "node": "Prepare Prompt", "type": "main", "index": 0 }]] },
+    "Prepare Prompt": { "main": [[{ "node": "OpenAI Summary", "type": "main", "index": 0 }]] },
+    "OpenAI Summary": { "main": [[{ "node": "Format Response", "type": "main", "index": 0 }]] }
+  }
+}
