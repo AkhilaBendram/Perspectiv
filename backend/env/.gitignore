@@ -1,0 +1,88 @@
+# ---------------------------
+# OS junk
+# ---------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------
+# Editors / IDEs
+# ---------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.iml
+.history/
+.fleet/
+
+# ---------------------------
+# Logs
+# ---------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---------------------------
+# Node / Vite (frontend)
+# ---------------------------
+node_modules/
+dist/
+.vite/
+.cache/
+.parcel-cache/
+*.tsbuildinfo
+
+# ---------------------------
+# Python (backend)
+# ---------------------------
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.mypy_cache/
+.pytype/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.eggs/
+*.egg-info/
+.build/
+build/
+dist/
+
+# ---------------------------
+# Environment files (never commit secrets)
+# Keep only the example templates
+# ---------------------------
+# Root envs
+.env
+.env.*
+!.env.example
+
+# Frontend envs
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Backend envs
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# ---------------------------
+# Misc
+# ---------------------------
+# lockfiles are intentionally kept for reproducible builds
+# package-lock.json / pnpm-lock.yaml / yarn.lock are NOT ignored
+
+# Local tooling
+*.swp
+*.swo
+.env*
