@@ -11,8 +11,7 @@ import type {
   AskAiResponse,
 } from "./types";
 
-export const BASE =
-  import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, "") ?? "http://localhost:8001";
+export const BASE = "https://perspectiv-production.up.railway.app";
 
 async function http<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, { ...init, headers: { ...(init?.headers || {}) } });
