@@ -18,15 +18,15 @@ APP_NAME = "Perspectiv Backend (compat)"
 
 app = FastAPI(title=APP_NAME, version=API_VERSION)
 
-_cors = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
-CORS_ORIGINS = [o.strip() for o in _cors.split(",") if o.strip()]
+# Very open CORS for public demo / portfolio use
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS or ["*"],
-    allow_credentials=True,
+    allow_origins=["*"],          # allow all origins
+    allow_credentials=False,      # must be False when using "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Optional Groq
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
